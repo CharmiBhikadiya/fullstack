@@ -2,7 +2,7 @@ import {useRouter} from 'next/router'
 import { Button } from '@mui/material';
 import styles from '../styles/Home.module.css'
 
-export default function Home({name, summary}) {
+export default function Home({ name, summary }) {
   const router = useRouter()
   return (
     <section className={styles.Home}>
