@@ -4,7 +4,7 @@ import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useEffect, useState } from 'react';
 
-export default function ProjectForm ({onSubmit}) {
+export default function ProjectForm ({ onSubmit, editValues }) {
 
   const defaultValues = {
     name: "",
@@ -12,6 +12,7 @@ export default function ProjectForm ({onSubmit}) {
     overview: "",
     tools: [],
     imageUrl: "",
+    projectLink: "",
   }
 
   const [skills, setSkills] = useState([])
@@ -39,20 +40,23 @@ export default function ProjectForm ({onSubmit}) {
     overview: yup.string(),
     tools: yup.array(),
     imageUrl: yup.string(),
+    projectLink: yup.string(),
   })
 
   const { control, watch, reset, handleSubmit } = useForm({
-    defaultValues,
+    defaultValues: editValues || defaultValues,
     resolver: yupResolver(projectFormSchema),
     mode: 'all',
   })
+
   const imageUrlValue = watch('imageUrl')
 
   return (
-    <form id='project-form'
+    <form
+      id='project-form'
       onReset={() => reset(defaultValues)}
       onSubmit={handleSubmit(onSubmit)}
-      style={{padding: '24px'}}
+      style={{ padding: '24px' }}
     >
       <Grid container spacing={ 4 }>
         <Grid item xs={8}>
@@ -146,7 +150,23 @@ export default function ProjectForm ({onSubmit}) {
         <Grid item xs={12}>
           <Controller
             control={ control }
-            name='Image URL'
+            name='projectLink'
+            render={ ({ field, fieldState }) => (
+              <TextField
+                { ...field }
+                label='Project link'
+                variant='outlined'
+                fullWidth
+                error={ !!fieldState.error }
+                helperText={ fieldState.error?.message }
+              />
+            )}
+          />
+        </Grid>
+        <Grid item xs={12}>
+          <Controller
+            control={ control }
+            name='imageUrl'
             render={ ({ field, fieldState }) => (
               <TextField
                 { ...field }
